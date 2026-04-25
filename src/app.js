@@ -38,7 +38,18 @@ app.get('/health', (req, res) => {
 
 // 라우터 임포트
 import authRouter from './routes/auth.js';
+import mountainsRouter from './routes/mountains.js';
+import meetingsRouter from './routes/meetings.js';
+import marketRouter from './routes/market.js';
+import profileRouter from './routes/profile.js';
+import hikeRouter from './routes/hike.js';
+
 app.use('/auth', authRouter);
+app.use('/mountains', mountainsRouter);
+app.use('/meetings', meetingsRouter);
+app.use('/market', marketRouter);
+app.use('/profile', profileRouter);
+app.use('/hike', hikeRouter);
 
 // 에러 핸들러
 app.use((err, req, res, next) => {
