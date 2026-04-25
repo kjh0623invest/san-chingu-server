@@ -1,6 +1,5 @@
 import express from 'express';
 import { query } from '../config/db.js';
-import { getSeasonalRecommendations } from '../services/mountainRecommend.js';
 
 const router = express.Router();
 
@@ -27,18 +26,6 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error('Mountains error:', err);
     res.status(500).json({ error: '산 목록 조회 중 오류 발생' });
-  }
-});
-
-// GET /mountains/recommend - 제철 명산 실시간 추천 (웹 검색)
-router.get('/recommend', async (req, res) => {
-  try {
-    const { season } = req.query;
-    const recommendations = await getSeasonalRecommendations(season);
-    res.json(recommendations);
-  } catch (err) {
-    console.error('Recommendation error:', err);
-    res.status(500).json({ error: '추천 정보 조회 중 오류 발생' });
   }
 });
 
