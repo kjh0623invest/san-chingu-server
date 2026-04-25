@@ -1,3 +1,6 @@
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+
 // 현재 달로 계절 계산
 export function getCurrentSeason() {
   const month = new Date().getMonth() + 1;
@@ -7,187 +10,133 @@ export function getCurrentSeason() {
   return 'winter';
 }
 
-// 지역별 명산 데이터 (읍면동까지 포함)
-const mountainsByRegion = {
-  '서울 강남구': {
-    spring: ['관악산', '청계산', '남산'],
-    summer: ['관악산', '남산'],
-    autumn: ['관악산', '남산', '청계산'],
-    winter: ['남산', '관악산']
-  },
-  '서울 강북구': {
-    spring: ['북한산', '수락산'],
-    summer: ['북한산', '수락산'],
-    autumn: ['북한산', '도봉산', '수락산'],
-    winter: ['북한산']
-  },
-  '서울 종로구': {
-    spring: ['북한산', '남산'],
-    summer: ['남산', '북한산'],
-    autumn: ['북한산', '남산'],
-    winter: ['남산', '북한산']
-  },
-  '경기 남양주시': {
-    spring: ['수락산', '가리산', '일대산'],
-    summer: ['수락산', '가리산', '축령산'],
-    autumn: ['가리산', '수락산'],
-    winter: ['가리산', '수락산']
-  },
-  '경기 성남시': {
-    spring: ['청계산', '경기산'],
-    summer: ['청계산', '경기산'],
-    autumn: ['청계산'],
-    winter: ['경기산']
-  },
-  '경기 의정부시': {
-    spring: ['도봉산', '수락산'],
-    summer: ['도봉산'],
-    autumn: ['도봉산', '수락산'],
-    winter: ['도봉산']
-  },
-  '강원 춘천시': {
-    spring: ['오봉산', '강선봉'],
-    summer: ['설악산', '오대산'],
-    autumn: ['설악산', '오대산'],
-    winter: ['대관령']
-  },
-  '강원 강릉시': {
-    spring: ['오죽령', '보현산'],
-    summer: ['설악산', '오대산', '해맞이공원'],
-    autumn: ['설악산', '오대산'],
-    winter: ['대관령', '오죽령']
-  },
-  '강원 원주시': {
-    spring: ['치악산'],
-    summer: ['치악산', '오대산'],
-    autumn: ['치악산', '설악산'],
-    winter: ['치악산', '태백산']
-  },
-  '경주 불국사면': {
-    spring: ['토함산', '금오산'],
-    summer: ['토함산'],
-    autumn: ['토함산', '불국사'],
-    winter: ['토함산']
-  },
-  '경주 안강읍': {
-    spring: ['팔공산'],
-    summer: ['팔공산'],
-    autumn: ['팔공산', '팔공산'],
-    winter: ['팔공산']
-  },
-  '전주시 완산구': {
-    spring: ['내장산'],
-    summer: ['덕유산', '변산'],
-    autumn: ['내장산', '덕유산'],
-    winter: ['덕유산', '내장산']
-  },
-  '전주시 덕진구': {
-    spring: ['내장산'],
-    summer: ['덕유산'],
-    autumn: ['내장산'],
-    winter: ['덕유산']
-  },
-  '대구 중구': {
-    spring: ['팔공산', '비슬산'],
-    summer: ['팔공산'],
-    autumn: ['팔공산', '비슬산'],
-    winter: ['팔공산']
-  },
-  '대구 동구': {
-    spring: ['팔공산'],
-    summer: ['팔공산'],
-    autumn: ['팔공산'],
-    winter: ['팔공산']
-  },
-  '제주 제주시': {
-    spring: ['한라산', '성산일출봉'],
-    summer: ['한라산'],
-    autumn: ['한라산'],
-    winter: ['한라산']
-  },
-  '제주 서귀포시': {
-    spring: ['한라산', '천지연폭포'],
-    summer: ['한라산'],
-    autumn: ['한라산'],
-    winter: ['한라산']
-  },
-  '부산 중구': {
-    spring: ['금정산'],
-    summer: ['금정산'],
-    autumn: ['금정산'],
-    winter: ['금정산']
-  },
-  '부산 해운대구': {
-    spring: ['금정산'],
-    summer: ['금정산'],
-    autumn: ['금정산'],
-    winter: ['금정산']
-  },
-  '인천 중구': {
-    spring: ['월미산', '북성포'],
-    summer: ['영종도', '월미도'],
-    autumn: ['월미산'],
-    winter: ['월미산']
-  },
-  '인천 남동구': {
-    spring: ['인천대공원'],
-    summer: ['인천대공원'],
-    autumn: ['인천대공원'],
-    winter: ['인천대공원']
-  },
-  '울산 중구': {
-    spring: ['울산암각화'],
-    summer: ['울산암각화'],
-    autumn: ['울산암각화'],
-    winter: ['울산암각화']
-  },
-  '광주 동구': {
-    spring: ['무등산'],
-    summer: ['무등산'],
-    autumn: ['무등산'],
-    winter: ['무등산']
-  },
-  '대전 중구': {
-    spring: ['계족산'],
-    summer: ['계족산'],
-    autumn: ['계족산'],
-    winter: ['계족산']
+// 계절별 검색 키워드
+function getSeasonKeyword(season) {
+  const keywords = {
+    spring: '봄 명산',
+    summer: '여름 명산',
+    autumn: '가을 단풍 명산',
+    winter: '겨울 눈꽃'
+  };
+  return keywords[season] || '명산';
+}
+
+// 구글 검색으로 산 이름 추출
+async function searchGoogle(query) {
+  try {
+    const encodedQuery = encodeURIComponent(query);
+    const url = `https://www.google.com/search?q=${encodedQuery}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
+      timeout: 5000
+    });
+
+    // HTML에서 산 이름 추출 (산, 봉, 산맥 등)
+    const mountainMatches = response.data.match(/([가-힣]+(?:산|봉|산맥|암산))/g) || [];
+    const unique = [...new Set(mountainMatches)].slice(0, 5);
+    return unique.length > 0 ? unique : null;
+  } catch (err) {
+    console.error('Google 검색 오류:', err.message);
+    return null;
   }
-};
+}
+
+// 나이버 블로그에서 산 이름 추출
+async function searchNaverBlog(query) {
+  try {
+    const encodedQuery = encodeURIComponent(query);
+    const url = `https://search.naver.com/search.naver?where=blog&sm=tab_jum&query=${encodedQuery}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
+      timeout: 5000
+    });
+
+    const $ = cheerio.load(response.data);
+    const mountains = [];
+
+    // 블로그 제목에서 산 이름 추출
+    $('a.title_link').each((idx, el) => {
+      if (mountains.length >= 5) return false;
+      const title = $(el).text().trim();
+      const match = title.match(/([가-힣]+(?:산|봉|산맥|암산))/);
+      if (match && match[1]) {
+        mountains.push(match[1]);
+      }
+    });
+
+    return mountains.length > 0 ? [...new Set(mountains)] : null;
+  } catch (err) {
+    console.error('Naver 블로그 검색 오류:', err.message);
+    return null;
+  }
+}
+
+// 웹 검색 수행
+async function searchMountains(query) {
+  console.log(`[웹 검색] ${query}`);
+
+  // 네이버 블로그 검색 시도
+  let results = await searchNaverBlog(query);
+  if (results && results.length > 0) {
+    console.log(`[검색 성공] Naver 블로그에서 ${results.length}개 발견`);
+    return results;
+  }
+
+  // 구글 검색 시도
+  results = await searchGoogle(query);
+  if (results && results.length > 0) {
+    console.log(`[검색 성공] Google에서 ${results.length}개 발견`);
+    return results;
+  }
+
+  console.log('[검색 실패] 웹 검색 결과 없음');
+  return null;
+}
 
 // 메인 추천 함수
 export async function getSeasonalRecommendations(season = null, region = null) {
   const targetSeason = season || getCurrentSeason();
-  const targetRegion = region || '서울 강남구';
+  const targetRegion = region || '서울';
 
-  console.log(`[명산 검색] 계절: ${targetSeason}, 지역: ${targetRegion}`);
+  const seasonKeyword = getSeasonKeyword(targetSeason);
+  const searchQuery = `${targetRegion} ${seasonKeyword}`;
 
-  // 지역별 명산 데이터에서 조회
-  let mountains = mountainsByRegion[targetRegion]?.[targetSeason];
+  console.log(`[명산 추천] 계절: ${targetSeason}, 지역: ${targetRegion}, 검색어: ${searchQuery}`);
 
-  // 해당 지역이 없으면 시도 수준으로 폴백
-  if (!mountains) {
-    const cityLevel = targetRegion.split(' ')[0];
-    for (const [region, seasons] of Object.entries(mountainsByRegion)) {
-      if (region.startsWith(cityLevel)) {
-        mountains = seasons[targetSeason];
-        if (mountains) break;
-      }
-    }
+  // 웹 검색 실행
+  const searchResults = await searchMountains(searchQuery);
+
+  if (searchResults && searchResults.length > 0) {
+    // 검색 결과에서 상위 3개 반환
+    return {
+      season: targetSeason,
+      region: targetRegion,
+      searchQuery,
+      mountains: searchResults.slice(0, 3).map((name) => ({
+        name: name.trim(),
+        region: targetRegion,
+        description: `${targetRegion}의 ${seasonKeyword}`
+      }))
+    };
   }
 
-  // 그래도 없으면 기본값
-  if (!mountains) {
-    mountains = ['북한산', '남산', '관악산'];
-  }
-
+  // 검색 실패 시 안내
   return {
     season: targetSeason,
     region: targetRegion,
-    mountains: mountains.map((name, idx) => ({
-      name: name,
-      region: targetRegion,
-      description: `${targetRegion}의 제철 명산 - ${['봄 진달래', '여름 폭포', '가을 단풍', '겨울 눈꽃'][['spring', 'summer', 'autumn', 'winter'].indexOf(targetSeason)]}`
-    }))
+    searchQuery,
+    mountains: [
+      {
+        name: '검색 결과 없음',
+        region: targetRegion,
+        description: `${searchQuery} 검색 결과가 없습니다. 다시 시도해주세요.`
+      }
+    ]
   };
 }
