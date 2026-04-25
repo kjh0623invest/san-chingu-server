@@ -14,11 +14,20 @@ await initDatabase();
 // Socket.io 설정
 export const io = new Server(httpServer, {
   cors: {
-    origin: [
-      'https://kjh0623invest.github.io',
-      'http://localhost:5173',
-      'http://localhost:3000'
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'https://kjh0623invest.github.io',
+        /^http:\/\/localhost:\d+$/  // localhost의 모든 포트 허용
+      ];
+
+      if (!origin || allowedOrigins.some(allowed =>
+        typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
+      )) {
+        callback(null, true);
+      } else {
+        callback(new Error('CORS not allowed'));
+      }
+    },
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -26,11 +35,20 @@ export const io = new Server(httpServer, {
 
 // 미들웨어
 app.use(cors({
-  origin: [
-    'https://kjh0623invest.github.io',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'https://kjh0623invest.github.io',
+      /^http:\/\/localhost:\d+$/  // localhost의 모든 포트 허용
+    ];
+
+    if (!origin || allowedOrigins.some(allowed =>
+      typeof allowed === 'string' ? allowed === origin : allowed.test(origin)
+    )) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
