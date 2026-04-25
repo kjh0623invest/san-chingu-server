@@ -3,9 +3,13 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import 'dotenv/config';
+import { initDatabase } from './db/init.js';
 
 const app = express();
 const httpServer = createServer(app);
+
+// 데이터베이스 초기화
+await initDatabase();
 
 // Socket.io 설정
 export const io = new Server(httpServer, {
