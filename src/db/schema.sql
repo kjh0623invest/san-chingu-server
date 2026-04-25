@@ -122,26 +122,42 @@ CREATE TABLE IF NOT EXISTS hike_records (
 -- ========== 초기 데이터: MOUNTAINS (32개 산) ==========
 INSERT INTO mountains (name, region, level, level_class, duration, season, tag, emoji, img_url)
 VALUES
--- SPRING (서울/경기/강원/경남/전남)
+-- SPRING (8개)
 ('아차산', '서울', '쉬움', 'easy', '1시간', 'spring', '🌸 봄꽃', '🌸', 'https://images.unsplash.com/photo-1490750967868-88df5691cc4f?w=400&h=280&fit=crop&q=85'),
 ('남산', '서울', '쉬움', 'easy', '1.5시간', 'spring', '🌸 도시숲', '🌸', 'https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?w=400&h=280&fit=crop&q=85'),
 ('북한산', '경기', '보통', 'medium', '3시간', 'spring', '🌷 진달래', '🌷', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
 ('가리산', '경기', '보통', 'medium', '3시간', 'spring', '🌺 철쭉', '🌺', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
--- SUMMER (강원/경기/경남/전남)
+('수락산', '경기', '쉬움', 'easy', '2시간', 'spring', '🌸 봄꽃', '🌸', 'https://images.unsplash.com/photo-1490750967868-88df5691cc4f?w=400&h=280&fit=crop&q=85'),
+('강화산', '인천', '보통', 'medium', '2.5시간', 'spring', '🌷 진달래', '🌷', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
+('팔미봉', '강원', '쉬움', 'easy', '2시간', 'spring', '🌸 봄꽃', '🌸', 'https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?w=400&h=280&fit=crop&q=85'),
+('삼화산', '경주', '보통', 'medium', '3시간', 'spring', '🌺 철쭉', '🌺', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
+-- SUMMER (8개)
 ('설악산', '강원', '어려움', 'hard', '7시간', 'summer', '🌿 녹음', '🌿', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
 ('내봉산', '경기', '보통', 'medium', '3시간', 'summer', '💧 폭포', '💧', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=280&fit=crop&q=85'),
 ('오대산', '강원', '보통', 'medium', '4시간', 'summer', '🌳 녹음', '🌳', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
 ('지리산', '전남', '어려움', 'hard', '6시간', 'summer', '🌊 계곡', '🌊', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=280&fit=crop&q=85'),
--- AUTUMN (서울/경기/강원/전북/경남)
+('덕유산', '전북', '보통', 'medium', '5시간', 'summer', '🌿 녹음', '🌿', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
+('변산', '전북', '보통', 'medium', '4시간', 'summer', '💧 폭포', '💧', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=280&fit=crop&q=85'),
+('침계산', '경남', '쉬움', 'easy', '2.5시간', 'summer', '🌊 계곡', '🌊', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=280&fit=crop&q=85'),
+('진안산', '전북', '보통', 'medium', '3시간', 'summer', '🌳 녹음', '🌳', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
+-- AUTUMN (8개)
 ('북한산', '서울', '보통', 'medium', '4시간', 'autumn', '🍁 단풍', '🍁', 'https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?w=400&h=280&fit=crop&q=85'),
 ('도봉산', '경기', '보통', 'medium', '3.5시간', 'autumn', '🍁 단풍', '🍁', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&q=85'),
 ('설악산', '강원', '어려움', 'hard', '7시간', 'autumn', '🍁 단풍', '🍁', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
 ('내장산', '전북', '보통', 'medium', '3시간', 'autumn', '🍂 단풍', '🍂', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
--- WINTER (강원/제주/경기/충북)
+('적상산', '전북', '보통', 'medium', '4시간', 'autumn', '🍁 단풍', '🍁', 'https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?w=400&h=280&fit=crop&q=85'),
+('속리산', '충북', '보통', 'medium', '3시간', 'autumn', '🍂 단풍', '🍂', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
+('지리산', '경남', '어려움', 'hard', '7시간', 'autumn', '🍁 단풍', '🍁', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
+('가야산', '경남', '보통', 'medium', '3.5시간', 'autumn', '🍂 단풍', '🍂', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=280&fit=crop&q=85'),
+-- WINTER (8개)
 ('태백산', '강원', '보통', 'medium', '3시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?w=400&h=280&fit=crop&q=85'),
 ('한라산', '제주', '어려움', 'hard', '9시간', 'winter', '❄️ 설경', '❄️', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=280&fit=crop&q=85'),
 ('치악산', '강원', '보통', 'medium', '4시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85'),
-('소백산', '충북', '보통', 'medium', '4시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=280&fit=crop&q=85')
+('소백산', '충북', '보통', 'medium', '4시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=280&fit=crop&q=85'),
+('대관령', '강원', '쉬움', 'easy', '2시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?w=400&h=280&fit=crop&q=85'),
+('응봉', '경주', '쉬움', 'easy', '1.5시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=280&fit=crop&q=85'),
+('백운산', '전남', '보통', 'medium', '3.5시간', 'winter', '❄️ 설경', '❄️', 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&h=280&fit=crop&q=85'),
+('덕필봉', '경북', '보통', 'medium', '3시간', 'winter', '❄️ 눈꽃', '❄️', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=280&fit=crop&q=85')
 ON CONFLICT DO NOTHING;
 
 -- ========== 초기 데이터: QUESTS (32개 퀘스트) ==========
