@@ -43,6 +43,7 @@ import meetingsRouter from './routes/meetings.js';
 import marketRouter from './routes/market.js';
 import profileRouter from './routes/profile.js';
 import hikeRouter from './routes/hike.js';
+import { initSocket } from './config/socket.js';
 
 app.use('/auth', authRouter);
 app.use('/mountains', mountainsRouter);
@@ -59,16 +60,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Socket.io 연결 처리
-io.on('connection', (socket) => {
-  console.log('새로운 클라이언트 연결:', socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('클라이언트 연결 해제:', socket.id);
-  });
-
-  // 추후 채팅 이벤트 추가
-});
+// Socket.io 초기화
+initSocket(io);
 
 // 서버 시작
 const PORT = process.env.PORT || 3000;
