@@ -36,9 +36,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 라우터 임포트 (추후 추가)
-// import authRouter from './routes/auth.js';
-// app.use('/auth', authRouter);
+// 라우터 임포트
+import authRouter from './routes/auth.js';
+app.use('/auth', authRouter);
 
 // 에러 핸들러
 app.use((err, req, res, next) => {
